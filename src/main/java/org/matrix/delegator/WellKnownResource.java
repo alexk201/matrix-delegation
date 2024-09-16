@@ -1,5 +1,7 @@
 package org.matrix.delegator;
 
+import java.util.Optional;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import jakarta.ws.rs.GET;
@@ -11,8 +13,23 @@ import jakarta.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class WellKnownResource {
 
-    @ConfigProperty(name = "server.url", defaultValue = "matrix.org:443")
+    @ConfigProperty(name = "idp.url")
+    Optional<String> idpUrl;
+
+    @ConfigProperty(name = "client.url")
+    String clientUrl;
+
+    @ConfigProperty(name = "server.url")
     String serverUrl;
+
+    @GET
+    @Path("client")
+    public ClientConfig getClientConfig() {
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.setHomeUrl(new BaseUrl(clientUrl));
+        idpUrl.ifPresent(e -> clientConfig.setIdpUrl(new BaseUrl(e)));
+        return clientConfig;
+    }
 
     @GET
     @Path("server")
@@ -20,4 +37,4 @@ public class WellKnownResource {
         return new ServerConfig(serverUrl);
     }
 
-} 
+}
