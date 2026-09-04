@@ -27,4 +27,4 @@ jobs:
     - name: Build & Push with Maven
       run: mvn -B install --file pom.xml
     - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@v5
+      uses: advanced-security/maven-dependency-submission-action@v6
